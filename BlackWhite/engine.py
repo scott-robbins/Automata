@@ -39,7 +39,8 @@ def diffuse(ngen, state):
 
     flipped = np.zeros(state.shape).flatten()
     while gen < ngen:
-        world = ndi.convolve(np.array(state), np.array(dfu))/10
+        # world = ndi.convolve(np.array(state), np.array(dfu))/10
+        world = ndi.convolve(np.array(state), np.array(k3))
         avg = world.mean()
         minima = world.min()
         dims = state.shape
@@ -73,12 +74,8 @@ width = 250
 height = 250
 circle = imutils.draw_centered_circle(np.zeros((width, height)), int(width/3), False)
 noise = np.array(np.random.random_integers(0, 255, width*height)).reshape((width,height))
-# imutils.filter_preview({'k1': ndi.convolve(circle, np.array(k1), origin=0)/100,
-#                         'k3': ndi.convolve(circle+noise, k3, origin=0)/100})
+
 test_image = plt.imread('amzn.jpeg')[:, :, 0] + generate_noise(plt.imread('amzn.jpeg')[:, :, 0])
 # test_image = circle + noise
-sim = diffuse(250, test_image)
+sim = diffuse(25, test_image)
 imutils.bw_render(sim, 50, False, '')
-
-opt = str(raw_input('Dou  you want to save this simulation? (y/n): '))
-
