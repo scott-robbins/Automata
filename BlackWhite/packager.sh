@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mkdir demo
-python $1
+python "$@"
 
 echo 'Enter Name for Output Archive: '
 read fname
