@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndi
-import scipy as scipy
 import numpy as np
 import imutils
 import time
+import sys
 
 
 def spawn_random_kernel(shape):
@@ -17,7 +17,7 @@ def run1(ngen, seed, probability, pfactor):
     k1 = [[]]
     dims = seed.shape
     gen = 0
-    [prob_kerns.append(spawn_random_kernel([3, 3])) for k in range(probability)]
+    [prob_kerns.append(spawn_random_kernel([13, 13])) for k in range(probability)]
     chance = np.random.random_integers(0, 100, len(prob_kerns)) > pfactor
     flipped = np.zeros((seed.shape)).flatten()
     while gen <= ngen:
@@ -38,8 +38,10 @@ def run1(ngen, seed, probability, pfactor):
             elif cell % 7 == 0 or cell % 9 == 0 or seed[ii] % 4 == 0:
                 seed[ii] += 1
                 flipped[ii] += 1
-            if flipped[ii] >= ngeneration - ngeneration/5:
+            if flipped[ii] >= ngeneration - ngeneration/2:
                 seed[ii] = 0
+            if (seed[ii]==1 or seed[ii]==255) and flipped[ii] > ngeneration/2 or cell % 6 == 0:
+                seed[ii] == 255
             ii += 1
         gen += 1
         seed = seed.reshape(dims)
@@ -90,7 +92,14 @@ state = np.zeros((W, H))
 state = imutils.draw_centered_circle(state, W/3, False)
 state[W/2-50:W/2+50, H/2-50:H/2+50] = 9
 noise = np.array(np.random.random_integers(0, 1, W*H)).reshape((W, H))
-sim = run1(ngeneration, state+noise/2, ngeneration+1, 75)
+slate = state+noise/2
+
+if '-im' in sys.argv:
+    slate = plt.imread(sys.argv[2])[:,:,0]
+
+    print '%s Loaded [%d x %d]' % (sys.argv[2], slate.shape[0],slate.shape[1])
+
+sim = blurs(ngeneration, slate, ngeneration+1, 65)
 print '[%s seconds Elapsed]' % str(time.time()-t0)
 
-imutils.bw_render(sim, 50, True, 'probabilistic3.mp4')
+imutils.bw_render(sim, 50, False, 'probabilistic4.mp4')
