@@ -2,6 +2,7 @@ from matplotlib.animation import FFMpegWriter
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndi
+import scipy.misc
 import numpy as np
 import resource
 import os
@@ -102,7 +103,6 @@ def spawn_random_point(state):
     return [x, y]
 
 
-
 def draw_centered_circle(canvas, radius, show):
     cx = canvas.shape[0]/2
     cy = canvas.shape[1]/2
@@ -130,3 +130,22 @@ def sharpen(image, level):
     imat = np.array(image)
     kernel = [[0,0,0],[0,level,0],[0,0,0]]
     return ndi.convolve(imat,kernel)
+
+
+def dump_images(animation, folder_name, doZip, cleanup):
+    if not os.path.isdir(folder_name):
+        os.mkdir(folder_name)
+    else:
+        print 'A folder named \033[1m%s\033[0m' % folder_name
+        exit(0)
+    ii = 0
+    for state in animation:
+        scipy.misc.imsave(folder_name+'/frame'+str(ii)+'.png', state)
+        ii += 1
+    if doZip:
+        os.system('zip -r image_dump.zip'+folder_name+'/')
+    if cleanup:
+        cmd = 'ls ' + folder_name + ' | while read n; do rm ' +\
+              folder_name + '/$n; done; rmdir ' + folder_name
+        os.system(cmd)
+    return ii
