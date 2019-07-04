@@ -4,6 +4,7 @@ import numpy as np
 import imutils
 import time
 import sys
+import os
 
 t0 = time.time()
 
@@ -16,11 +17,11 @@ if len(sys.argv) == 2:
     width = im.shape[0]
     height = im.shape[1]
     imean = np.array(im) >= 2
-    rand_seed = imean[:,:,2] - np.random.random_integers(0, 1, width * height).reshape((width, height))
+    rand_seed = imean[:,:,2] + np.random.random_integers(0, 1, width * height).reshape((width, height)) - 1
 else:
     rand_seed = np.random.random_integers(0, 1, width * height).reshape((width, height))
-activation = 5
-depth = 50
+activation = 12
+depth = 100
 k = [[1,1,1],[1,0,1],[1,1,1]]
 k2 = [[1,1,1,1],[1,0,0,1],[1,0,0,1],[1,1,1,1]]
 k3 = [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]
@@ -30,22 +31,19 @@ simulation = [state]
 dims = state.shape
 gen = 0
 while gen < depth:
-    world = ndi.convolve(state, k2, origin=0)
+    noise = np.random.random_integers(0, 1, 9).reshape((3, 3))
+    world = ndi.convolve(state, k2, origin=0) + ndi.convolve(state,noise,origin=0)
     avg = world.mean()
     state = state.flatten()
     ii = 0
     for cell in world.flatten():
         try:
-            if cell % activation == 0 and state[ii] == 0:
-                state[ii] = 1
-            if cell > activation and state[ii] == 0:
+            if cell % activation == 0 and state[ii] == 1:
+                state[ii] = 0
+            if cell >= activation and state[ii] == 0:
                 state[ii] = 1
             if cell <= 1 and state[ii] == 1:
                 state[ii] = 0
-            if cell == activation and state[ii] == 1:
-                state[ii] = 0
-            if cell == 8 and state[ii] == 0:
-                state[ii] = 1
             if cell == 8 and state[ii] == 1:
                 state[ii] = 0
         except:
