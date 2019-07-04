@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 import scipy.ndimage as ndi
 import numpy as np
 import imutils
+import time
 import sys
 
+t0 = time.time()
 
 def growth_simulate(state, n_steps, doSave):
     f = plt.figure()
@@ -17,10 +19,10 @@ def growth_simulate(state, n_steps, doSave):
         for x in range(state.shape[0]):
             for y in range(state.shape[1]):
                 if world[x,y] == 2:
-                    state[x,y] = 1
-                # if world[x, y] == 3:
-                #     state[x, y] += 1
-                if world[x, y]  == 4 == 0:
+                    state[x,y] += 1
+                # if world[x, y] == 6:
+                #     state[x, y] -= 1
+                if world[x, y] % 4 == 0:
                     state[x, y] = 0
         simulation.append([plt.imshow(state,'gray')])
         history.append(state)
@@ -37,9 +39,9 @@ w = 250
 h = 250
 
 state = np.zeros((w, h))
-state = imutils.draw_centered_circle(state,20,2,False)
-state = imutils.draw_centered_box(state,10,1,False)
+state = imutils.draw_centered_circle(state,140,2,False)
+state = imutils.draw_centered_box(state,70,1,False)
 plt.close()
 if 'growth' in sys.argv:
-    save = {'do':True,'name':'fractal_fire_0.mp4','fps':100}
+    save = {'do':True,'name':'fractal_fire_2.mp4','fps':150}
     simulation = growth_simulate(state, 150, save)

@@ -102,8 +102,7 @@ def spawn_random_point(state):
     return [x, y]
 
 
-
-def draw_centered_circle(canvas, radius, show):
+def draw_centered_circle(canvas, radius,value, show):
     cx = canvas.shape[0]/2
     cy = canvas.shape[1]/2
     for x in np.arange(cx - radius, cx + radius, 1):
@@ -111,7 +110,7 @@ def draw_centered_circle(canvas, radius, show):
             r =np.sqrt((x-cx)*(x-cx) + ((cy-y)*(cy-y)))
 
             if r <= radius:
-                canvas[x, y] = 255
+                canvas[x, y] = value
     if show:
         plt.imshow(canvas, 'gray_r')
         plt.show()
@@ -130,3 +129,14 @@ def sharpen(image, level):
     imat = np.array(image)
     kernel = [[0,0,0],[0,level,0],[0,0,0]]
     return ndi.convolve(imat,kernel)
+
+
+def draw_centered_box(state, sz, value, show):
+    cx = state.shape[0]/2
+    cy = state.shape[1]/2
+    new_state = state
+    new_state[cx-sz:cx+sz,cy-sz:cy+sz] = value
+    if show:
+        plt.imshow(new_state, 'gray')
+        plt.show()
+    return new_state
