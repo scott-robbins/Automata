@@ -7,26 +7,67 @@ import imutils
 import time
 import sys
 
-t0 = time.time()
 
 def growth_simulate(state, n_steps, doSave):
+    t0 = time.time()
     f = plt.figure()
     history = [state]
     simulation = []
-    simulation.append([plt.imshow(state,'gray')])
+    simulation.append([plt.imshow(state, 'gray_r')])
     for i in range(n_steps):
         world = ndi.convolve(state, np.ones((3, 3)))
+        avg = world.mean()
         for x in range(state.shape[0]):
             for y in range(state.shape[1]):
-                if world[x,y] == 2:
-                    state[x,y] += 1
-                # if world[x, y] == 6:
-                #     state[x, y] -= 1
+                if world[x, y] % 5 and world[x,y] > avg:
+                    state[x, y] = 1
+                if world[x, y] == 8 and state[x,y] <=1:
+                    state[x,y] = 0
+                    world[x,y] = 1
+                if world[x, y] % 3 == 0:
+                    state[x, y] -= 1
                 if world[x, y] % 4 == 0:
-                    state[x, y] = 0
-        simulation.append([plt.imshow(state,'gray')])
+                    state[x, y] += 1
+                if state[x,y] > 15 and (world[x,y] == 8 or world[x,y] == 6):
+                    state[x,y] = 0
+        simulation.append([plt.imshow(state, 'gray')])
         history.append(state)
-    a = animation.ArtistAnimation(f,simulation,interval=100,blit=True,repeat_delay=900)
+    print '\033[31m\033[1m\t\t** SIMULATION FINISHED [%ss Elapsed]\033[0m\033[1m **\033[0m' % \
+          str(time.time()-t0)
+    print '\033[3mRendering %d Frames\033[0m' % len(simulation)
+    a = animation.ArtistAnimation(f, simulation, interval=100,blit=True, repeat_delay=900)
+    if doSave['do']:
+        writer = FFMpegWriter(fps=doSave['fps'], metadata=dict(artist='Me'), bitrate=1800)
+        a.save(doSave['name'], writer=writer)
+    plt.show()
+    return history
+
+
+def big_bang(state, n_steps, doSave):
+    f = plt.figure()
+    t0 = time.time()
+    history = [state]
+    simulation = []
+    simulation.append([plt.imshow(state, 'gray')])
+    for i in range(n_steps):
+        world = ndi.convolve(state, np.ones((3, 3)))
+        avg = world.mean()
+        depth = np.array(state).max()
+        for x in range(state.shape[0]):
+            for y in range(state.shape[1]):
+                if world[x, y] % 5 and world[x,y] > avg:
+                    state[x, y] -= 1
+                if world[x, y] == 8 and state[x,y] <=1:
+                    state[x,y] += 1
+                    world[x,y] += 1
+                if state[x,y] > 15 and (world[x,y] == 8 or world[x,y] == 6):
+                    state[x,y] = 0
+        simulation.append([plt.imshow(state, 'gray')])
+        history.append(state)
+    print '\033[31m\033[1m\t\t** SIMULATION FINISHED [%ss Elapsed]\033[0m\033[1m **\033[0m' % \
+          str(time.time()-t0)
+    print '\033[3mRendering %d Frames\033[0m' % len(simulation)
+    a = animation.ArtistAnimation(f, simulation, interval=100,blit=True, repeat_delay=900)
     if doSave['do']:
         writer = FFMpegWriter(fps=doSave['fps'], metadata=dict(artist='Me'), bitrate=1800)
         a.save(doSave['name'], writer=writer)
@@ -37,11 +78,27 @@ def growth_simulate(state, n_steps, doSave):
 ''' DEFINE DIMENISONS'''
 w = 250
 h = 250
-
 state = np.zeros((w, h))
-state = imutils.draw_centered_circle(state,140,2,False)
-state = imutils.draw_centered_box(state,70,1,False)
+''' CREATE INITIAL STATE '''
+state = imutils.draw_centered_circle(state, 120, 1, False)
+state = imutils.draw_centered_circle(state, 60, -1, False)
+state = imutils.draw_centered_circle(state, 20, 2, False)
+state = imutils.draw_centered_circle(state, 10, -1, False)
+state = imutils.draw_centered_box(state,80,2,False)
+state = imutils.draw_centered_box(state,40,-1,False)
 plt.close()
+
+print '\033[1m\033[36mSTARTING ' + str(sys.argv[1]).upper()+' SIMULATION\033[0m'
+''' SELECT A SIMULATION '''
 if 'growth' in sys.argv:
-    save = {'do':True,'name':'fractal_fire_2.mp4','fps':150}
-    simulation = growth_simulate(state, 150, save)
+
+    save = {'do': True,
+            'name': 'big_bang_2.mp4',
+            'fps': 75}
+    simulation = growth_simulate(state, 350, save)
+if 'big_bang' in sys.argv:
+    save = {'do': False,
+            'name': 'big_bang_2.mp4',
+            'fps': 75}
+    simulation = big_bang(state, 50, save)
+
