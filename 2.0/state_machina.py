@@ -97,8 +97,8 @@ if 'growth' in sys.argv:
             'fps': 75}
     simulation = growth_simulate(state, 350, save)
 if 'big_bang' in sys.argv:
-    save = {'do': False,
-            'name': 'big_bang_2.mp4',
-            'fps': 75}
-    simulation = big_bang(state, 50, save)
+    save = {'do': True,
+            'name': 'big_bang_3.mp4',
+            'fps': 65}
+    simulation = big_bang(state, 150, save)
 
