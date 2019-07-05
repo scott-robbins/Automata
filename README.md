@@ -8,6 +8,21 @@
 intentional initial states, interesting patterns emerge.
 
 ## Experiments 
-![1](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_1.mp4)
-![2](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_2.mp4)
-![3](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_3.mp4)
+
+*Basic parity Experiments*
+
+![pair 1](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_1.mp4)
+
+![pair 2](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_2.mp4)
+
+
+*Big Bang Experiments*
+
+![big bang](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang.mp4)
+
+![big bang 1](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_1.mp4)
+
+![big bang 2](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_2.mp4)
+
+![big bang 3](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_3.mp4)
+
