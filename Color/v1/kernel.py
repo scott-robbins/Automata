@@ -98,8 +98,8 @@ if '-im' in sys.argv:
     slate = plt.imread(sys.argv[2])[:,:,0]
 
     print '%s Loaded [%d x %d]' % (sys.argv[2], slate.shape[0],slate.shape[1])
-
-sim = blurs(ngeneration, slate, ngeneration+1, 65)
+sim = run1(ngeneration,slate, 65, .65)
+# sim = blurs(ngeneration, slate, ngeneration+1, 65)
 print '[%s seconds Elapsed]' % str(time.time()-t0)
 
 imutils.bw_render(sim, 50, False, 'probabilistic4.mp4')

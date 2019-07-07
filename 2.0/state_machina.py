@@ -79,14 +79,15 @@ def big_bang(state, n_steps, doSave):
     return history
 
 
-def main():
-    print '\033[1m=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n' \
-          '||                        _______________________                                ||\n' \
-          '||                       |XXXmmMMMMMMMMMMMMMmmXXX|                               ||\n' \
-          '||                       |__ <A.U.T.O.M.A.T.A> __|                               ||\n' \
-          '||                       |XXXwwWWWWWWWWWWWWWwwXXX|                               ||\n' \
-          '||                       \=-=-~:_VVVWVVV_:~-=-=-/                                ||\n' \
-          '=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n'
+def initialize():
+    print '\033[1m=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n'\
+            '||                        _______________________                           ||\n'\
+            '||                       /=-=-~:-MMMMMMMMM-:~-=-=\                           ||\n'\
+            '||                       |XXXmmMMMMMMMMMMMMMmmXXX|                          ||\n'\
+            '||                       |__ <\033[31mA.U.T.O.M.A.T.A\033[0m\033[1m> __           ||\n'\
+            '||                       |XXXwwWWWWWWWWWWWWWwwXXX|                          ||\n'\
+            '||                       \=-=-~:_VVVVVVVV_:~-=-=-/                           ||\n'\
+                '=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n'
     ''' DEFINE DIMENISONS'''
     w = 250
     h = 250
@@ -101,11 +102,16 @@ def main():
     state_2 = np.zeros((w, h))
     state_2 = imutils.draw_centered_box(state, 60, 2, False)
     state_2 = imutils.draw_centered_circle(state, 80, 1, False)
-    state_2 += np.random.random_integers(-1,2,w*h).reshape((w, h))
+    state_2 += np.random.random_integers(-1, 2, w * h).reshape((w, h))
+    return state, state_2
+
+
+def main():
+    state, state_2 = initialize()
     plt.imshow(state, 'gray')
     plt.close()
 
-    if len(sys.argv)==3:
+    if len(sys.argv) == 3:
         state_2 = np.array(plt.imread(sys.argv[2]))[:, :, 0]
 
     if len(sys.argv) > 1:
@@ -118,7 +124,7 @@ def main():
                 'fps': 55}
         sim = growth_simulate(state, 350, save)
     if 'big_bang' in sys.argv:
-        save = {'do': True,
+        save = {'do': False,
                 'name': 'big_steal.mp4',
                 'fps': 65}
         sim = big_bang(state_2, 150, save)
