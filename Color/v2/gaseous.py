@@ -64,7 +64,7 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
         gen += 1
         simulation.append([plt.imshow(state)])
     '''   ANIMATE '''
-    a = animation.ArtistAnimation(f,simulation,interval=100,blit=True,repeat_delay=900)
+    a = animation.ArtistAnimation(f,simulation,interval=350,blit=True,repeat_delay=900)
     print 'FINISHED [%ss Elapsed]' % str(time.time() - tic)
     writer = FFMpegWriter(fps=frame_rate, metadata=dict(artist='Me'), bitrate=1800)
     a.save(file_name, writer=writer)
@@ -76,8 +76,8 @@ width = 150
 height = 150
 state = np.zeros((width, height, 3))
 n_points_total = 1000
-box = imutils.draw_centered_box(np.zeros((width, height)), 35, 1, False)
-circ = imutils.draw_centered_circle(np.zeros((width, height)), 40, 1, False)
+box = imutils.draw_centered_box(np.zeros((width, height)), 65, 1, False)
+circ = imutils.draw_centered_circle(np.zeros((width, height)), 45, 1, False)
 '''  RUN SIMULATION '''
 initial_state = create_color_pt_cloud(state, 'B', n_points_total)
 initial_state[:,:,2] = box
