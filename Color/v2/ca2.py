@@ -13,6 +13,7 @@ R = [1,0,0]
 G = [0,1,0]
 B = [0,0,1]
 
+
 def create_color_pt_cloud(state, color, n_points):
     for i in range(n_points):
         [x, y] = imutils.spawn_random_point(np.zeros((width, height)))
@@ -22,6 +23,16 @@ def create_color_pt_cloud(state, color, n_points):
             state[x,y,1] = 1
         if color == 'B':
             state[x,y,2] = 1
+        if color == 'C':
+            state[x,y,:] = [0,1,1]
+        if color == 'M':
+            state[x,y,:] = [1,0,1]
+        if color == 'Y':
+            state[x,y,:] = [1,1,0]
+        if color == 'K':
+            state[x,y,:] = [0,0,0]
+        if color == 'W':
+            state[x,y,:] = [1,1,1]
     return state
 
 
@@ -114,64 +125,87 @@ def rule_set_two(pos,state,rch,gch,bch,gen,ngen):
         state[x,y,:] = [0,1,1]
     elif (gch[x,y] and rch[x,y]) % m1 == 0:
         state[x,y,:] = [1,1,0]
-    if (float(gen)/ngen) >= 0.5: # Constraining Growth of Organism
-        if gch[x,y] == 8 and (rch[x,y] and bch[x,y]) % m1 != 0:
-         state[x,y,:] = [1,0,0]
+    # if (float(gen)/ngen) >= 0.5: # Constraining Growth of Organism
+    #     if gch[x,y] == 8 and (rch[x,y] and bch[x,y]) % m1 != 0:
+    #      state[x,y,:] = [1,0,0]
+    #
+    #     if state[x,y,0]==1 and state[x,y,1]==1 and state[x,y,2]==0: # YELLOW
+    #         yellow = True
+    #         if bch[x, y] % m2 == 0:
+    #             state[x,y,:] = [0,0,1]
+    #         if bch[x, y] % m1 == 0:
+    #             state[x,y,:] = [1,0,1]
+    #         if (rch[x,y] and gch[x,y]) % (m1 or m2) ==0:
+    #             state[x,y,:] = [0,1,1]
+    #     # Constrain overgrowth
+    #     if red or yellow and gch[x, y] <= rch[x,y]:
+    #         # flip = np.random.random_integers(0, 1, 1)[0]
+    #         # if flip < 3:
+    #         #     state[x, y, :] = [0, 1, 0]
+    #         # elif 6 > flip >= 3:
+    #         #     state[x, y, :] = [1, 0, 0]
+    #         # else:
+    #         #     state[x, y, :] = [0, 0, 1]
+    #         state[x,y,:] = [0,1,0]
+    #
+    #     if state[x,y,0] == 0 and state[x,y,1] == 0 and state[x,y,2] == 1:   # BLUE
+    #         blue = True
+    #         if rch[x,y] > (gch[x,y] or bch[x,y]):
+    #             state[x,y,:] = [1,0,0]
+    #         if gch[x,y] > (rch[x,y] or bch[x,y]):
+    #             state[x,y,:] = [0,1,0]
+    #         if bch[x,y] > (rch[x,y] and gch[x,y]):
+    #             state[x,y,:] = [1,1,1]
+    #         if rch[x,y] == gch[x,y] :
+    #             state[x,y,:] = [1,1,0]
+    #
+    #     if state[x, y, 0] == 0 and state[x, y, 1] == 1 and state[x, y, 2] == 0: # GREEN
+    #         green = True
+    #         if bch[x,y] > 1 and gch[x,y] % 8 == 0:
+    #             state[x,y,:] = [0,0,1]
+    #         if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
+    #             state[x, y, :] = [0, 1, 1]
+    #         if gch[x,y] == 8 and rch[x,y]%m2==0:
+    #             state[x,y,:] = [1,0,0]
+    #     if state[x,y,0] == 1 and state[x,y,1] == 0 and state[x,y,2] == 0: # RED
+    #         red = True
+    #         if rch[x,y] % 3 == 0:
+    #             if bch[x,y] > gch[x,y]:
+    #                 state[x,y,:] = [0,0,1]
+    #             if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
+    #                state[x,y,:] = [0,1,1]
+    #             if rch[x,y] == 8 and gch[x,y] % m1==0:
+    #                 state[x,y,:] = [1,1,0]
+    #
+    #     if bch[x, y] % m1 == 0:
+    #         state[x, y, :] = [1, 0, 1]
+    #     if rch[x, y] % m2 == 0:
+    #         state[x, y, :] = [1, 0, 1]
+    #     if rch[x, y] % m1 == 0:
+    #         state[x, y, :] = [0, 1, 1]
 
-        if state[x,y,0]==1 and state[x,y,1]==1 and state[x,y,2]==0: # YELLOW
-            yellow = True
-            if bch[x, y] % m2 == 0:
-                state[x,y,:] = [0,0,1]
-            if bch[x, y] % m1 == 0:
-                state[x,y,:] = [1,0,1]
-            if (rch[x,y] and gch[x,y]) % (m1 or m2) ==0:
-                state[x,y,:] = [0,1,1]
-        # Constrain overgrowth
-        if red or yellow and gch[x, y] <= rch[x,y]:
-            # flip = np.random.random_integers(0, 1, 1)[0]
-            # if flip < 3:
-            #     state[x, y, :] = [0, 1, 0]
-            # elif 6 > flip >= 3:
-            #     state[x, y, :] = [1, 0, 0]
-            # else:
-            #     state[x, y, :] = [0, 0, 1]
-            state[x,y,:] = [0,1,0]
+    return state
 
-        if state[x,y,0] == 0 and state[x,y,1] == 0 and state[x,y,2] == 1:   # BLUE
-            blue = True
-            if rch[x,y] > (gch[x,y] or bch[x,y]):
-                state[x,y,:] = [1,0,0]
-            if gch[x,y] > (rch[x,y] or bch[x,y]):
-                state[x,y,:] = [0,1,0]
-            if bch[x,y] > (rch[x,y] and gch[x,y]):
-                state[x,y,:] = [1,1,1]
-            if rch[x,y] == gch[x,y] :
-                state[x,y,:] = [1,1,0]
 
-        if state[x, y, 0] == 0 and state[x, y, 1] == 1 and state[x, y, 2] == 0: # GREEN
-            green = True
-            if bch[x,y] > 1 and gch[x,y] % 8 == 0:
-                state[x,y,:] = [0,0,1]
-            if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
-                state[x, y, :] = [0, 1, 1]
-            if gch[x,y] == 8 and rch[x,y]%m2==0:
-                state[x,y,:] = [1,0,0]
-        if state[x,y,0] == 1 and state[x,y,1] == 0 and state[x,y,2] == 0: # RED
-            red = True
-            if rch[x,y] % 3 == 0:
-                if bch[x,y] > gch[x,y]:
-                    state[x,y,:] = [0,0,1]
-                if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
-                   state[x,y,:] = [0,1,1]
-                if rch[x,y] == 8 and gch[x,y] % m1==0:
-                    state[x,y,:] = [1,1,0]
+def rule_set_tre(pos, state, rch, gch, bch, gen, ngen):
+    x = pos[0]
+    y = pos[1]
 
-        if bch[x, y] % m1 == 0:
-            state[x, y, :] = [1, 0, 1]
-        if rch[x, y] % m2 == 0:
-            state[x, y, :] = [1, 0, 1]
-        if rch[x, y] % m1 == 0:
-            state[x, y, :] = [0, 1, 1]
+    ravg = rch.mean()
+    gavg = gch.mean()
+    bavg = bch.mean()
+
+    m1 = 7
+    m2 = 8
+
+    red = False
+    green = False
+    blue = False
+    cyan = False
+    magenta = False
+    yellow = False
+    black = False
+    white = True
 
     return state
 
@@ -180,7 +214,6 @@ def simulation(state, depth, saveData):
     f = plt.figure()
     simulation = list()
     simulation.append([plt.imshow(state)])
-
     k0 = [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
     ind2sub = imutils.LIH_flat_map_creator(state)
 
@@ -196,8 +229,9 @@ def simulation(state, depth, saveData):
             should help me generate tests more rapidly and also hold onto the more 
             interesting rule sets (which often get lost during modification)
             '''
-            # state = rule_set_one(ind2sub[px], state, rworld, gworld, bworld)
+            #state = rule_set_one(ind2sub[px], state, rworld, gworld, bworld)
             state = rule_set_two(ind2sub[px], state, rworld, gworld, bworld, gen, depth)
+            # state = rule_set_tre(ind2sub[px], state, rworld, gworld, bworld, gen, depth)
         simulation.append([plt.imshow(state)])
         gen += 1
 
@@ -214,16 +248,17 @@ if __name__ == '__main__':
     width = 100
     height = 100
     state = np.zeros((width, height, 3))
-    state[:,:,0] += imutils.draw_centered_circle(np.zeros((width,height)), width/4,1,False)
-    state[:,:,2] += imutils.draw_centered_box(np.zeros((width, height)), width-60,1,False)
+    state[:, :, 0] += imutils.draw_centered_box(np.zeros((width, height)), 45, 1, False)
+    state[:, :, 1] += imutils.draw_centered_circle(np.zeros((width, height)), 35, 1, False)
+    state[:, :, 2] += imutils.draw_centered_box(np.zeros((width, height)), 35, 1, False)
 
     if 'gas' in sys.argv:
-        try:
-            state = create_color_pt_cloud(state, sys.argv[2], int(sys.argv[3]))
-        except:
-            print 'Incorrect Usage!'
-            pass
-
+        state = np.zeros((width, height, 3))
+        state += create_color_pt_cloud(state, 'Y', 1000)
+        state += create_color_pt_cloud(state, 'G', 1000)
+        state[:, :, 0] += imutils.draw_centered_box(np.zeros((width, height)), 45, 1, False)
+        state[:, :, 1] += imutils.draw_centered_circle(np.zeros((width, height)), 35, 1, False)
+        state[:, :, 2] += imutils.draw_centered_box(np.zeros((width, height)),  35, 1, False)
     ''' Optionally load image as initial state'''
     if '-i' in sys.argv:
         state = np.array(plt.imread(sys.argv[2]))
@@ -232,5 +267,5 @@ if __name__ == '__main__':
     ''' RUN SIMULATION '''
     simulation(state, 70, {'save': True,
                            'frame_rate': 10,
-                           'file_name': 'CA_organisms3.mp4'})
+                           'file_name': 'CA_2.mp4'})
 # EOF
