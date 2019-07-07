@@ -58,8 +58,12 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
                 state[x, y] = [1, 0, 0]
             if rworld[x, y] % 4 == 0 and (bworld[x, y] and rworld[x,y]) >= 4:
                 state[x, y] = [1, 0, 1]
-            if (state[x, y][0] and state[x, y][2]) == 1 and state[x, y][1] == 0 and (rworld[x,y] or bworld[x,y])% 5 == 0:
+            # If magenta, and R(ii)/B(ii) % 5 make yellow
+            if (state[x, y][0] and state[x, y][2]) == 1 and state[x, y][1] == 0 and (rworld[x,y] or bworld[x,y]) % 5 == 0:
                 state[x, y] = [1, 1, 0]
+            # If cyan, and R(ii)/B(ii) % 5 make green
+            if (state[x, y][1] and state[x, y][2]) == 1 and state[x, y][0] == 0 and (gworld[x,y] or bworld[x,y]) % 4 == 0:
+                state[x,y] = [0,1,0]
 
         gen += 1
         simulation.append([plt.imshow(state)])
