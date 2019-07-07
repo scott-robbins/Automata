@@ -12,7 +12,6 @@ k0 = [[1,1,1],[1,1,1],[1,1,1]]
 
 
 def create_color_pt_cloud(state, color, n_points):
-
     for i in range(n_points):
         [x, y] = imutils.spawn_random_point(np.zeros((width, height)))
         if color == 'R':
@@ -24,28 +23,14 @@ def create_color_pt_cloud(state, color, n_points):
     return state
 
 
-def LIH_flat_map_creator(state):
-    """
-    LoopInvariantHoisting to preallocate a map, that
-    pairs a flattened index of a corresponding state to
-    an x-y position.
-    :param state:
-    :return:
-    """
-    index_map = {}
-    for index in range(state.shape[0]*state.shape[1]):
-        index_map[index] = imutils.ind2sub(index, [state.shape[0], state.shape[1]])
-    return index_map
-
-
-def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
+def probabilistic_cloud(state, n_generations, frame_rate, file_name):
     print '\t\t\033[1m\033[3m** STARTING SIMULATION **\033[0m'
     f = plt.figure()
     gen = 0
     simulation = list()
     simulation.append([plt.imshow(state)])
 
-    ind2sub = LIH_flat_map_creator(state)
+    ind2sub = imutils.LIH_flat_map_creator(state)
 
     while gen < n_generations:
         rworld = ndi.convolve(state[:,:,0], k0, origin=0)
@@ -82,8 +67,6 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
                 elif rworld[x, y] % 4 == 0:
                     state[x, y] = [1, 1, 0]
             # If White? ( Here's where it can get REALLY cool I think
-
-
         gen += 1
         simulation.append([plt.imshow(state)])
 
@@ -95,20 +78,22 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
     plt.show()
 
 
-''' STATE INITIALIZATION '''
-width = 150
-height = 150
-state = np.zeros((width, height, 3))
-n_points_total = 1000
-box = imutils.draw_centered_box(np.zeros((width, height)), 65, 1, False)
-circ = imutils.draw_centered_circle(np.zeros((width, height)), 45, 1, False)
-b1 = imutils.draw_centered_circle(np.zeros((width, height)), 25, 1, False)
+if __name__ == '__main__':
+    ''' STATE INITIALIZATION '''
+    width = 150
+    height = 150
+    state = np.zeros((width, height, 3))
+    n_points_total = 1000
+    box = imutils.draw_centered_box(np.zeros((width, height)), 65, 1, False)
+    circ = imutils.draw_centered_circle(np.zeros((width, height)), 45, 1, False)
+    b1 = imutils.draw_centered_circle(np.zeros((width, height)), 25, 1, False)
 
-'''  RUN SIMULATION '''
-initial_state = create_color_pt_cloud(state, 'R', n_points_total)
-initial_state[:,:,2] += circ
-initial_state[:,:,1] += box
-initial_state[:,:,0] += b1
+    '''  RUN SIMULATION '''
+    initial_state = create_color_pt_cloud(state, 'R', n_points_total)
+    initial_state[:, :, 2] += circ
+    initial_state[:, :, 1] += box
+    initial_state[:, :, 0] += b1
 
-probabilistic_cloud(initial_state, [0.9, 0.8,0.5], 200, 250, 'ColorAutomata5.mp4')
+    probabilistic_cloud(initial_state, 200, 250, 'ColorAutomata5.mp4')
+
 

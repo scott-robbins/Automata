@@ -40,6 +40,20 @@ def color_render(frames, frame_rate, save, file_name):
     plt.show()
 
 
+def LIH_flat_map_creator(state):
+    """
+    LoopInvariantHoisting to preallocate a map, that
+    pairs a flattened index of a corresponding state to
+    an x-y position.
+    :param state:
+    :return:
+    """
+    index_map = {}
+    for index in range(state.shape[0]*state.shape[1]):
+        index_map[index] = ind2sub(index, [state.shape[0], state.shape[1]])
+    return index_map
+
+
 def check_mem_usage():
     """
     Return the amount of RAM usage, in bytes, being consumed currently.
