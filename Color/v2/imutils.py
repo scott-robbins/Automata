@@ -87,10 +87,11 @@ def ind2sub(index,dims):
     """
     subs = []
     ii = 0
-    for y in range(dims[1]):
-        for x in range(dims[0]):
+    for x in range(dims[0]):
+        for y in range(dims[1]):
             if index==ii:
-                subs = [x,y]
+                subs = [x, y]
+                return subs
             ii +=1
     return subs
 
@@ -102,16 +103,17 @@ def spawn_random_point(state):
     return [x, y]
 
 
-
-def draw_centered_circle(canvas, radius, show):
+def draw_centered_circle(canvas, radius,value, show):
     cx = canvas.shape[0]/2
     cy = canvas.shape[1]/2
     for x in np.arange(cx - radius, cx + radius, 1):
         for y in np.arange(cy - radius, cy + radius, 1):
-            r =np.sqrt((x-cx)*(x-cx) + ((cy-y)*(cy-y)))
-
+            r = np.sqrt((x-cx)**2 + ((cy-y)**2))
             if r <= radius:
-                canvas[x, y] = 255
+                try:
+                    canvas[x, y] = value
+                except IndexError:
+                    pass
     if show:
         plt.imshow(canvas, 'gray_r')
         plt.show()
@@ -130,3 +132,13 @@ def sharpen(image, level):
     imat = np.array(image)
     kernel = [[0,0,0],[0,level,0],[0,0,0]]
     return ndi.convolve(imat,kernel)
+
+
+def draw_centered_box(state, sz, value, show):
+    cx = state.shape[0]/2
+    cy = state.shape[1]/2
+    state[cx-sz:cx+sz,cy-sz:cy+sz] = value
+    if show:
+        plt.imshow(state)
+        plt.show()
+    return state
