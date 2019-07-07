@@ -78,7 +78,7 @@ def rule_set_one(pos, state, rch, gch, bch):
     return state
 
 
-def rule_set_two(pos,state,rch,gch,bch):
+def rule_set_two(pos,state,rch,gch,bch,gen):
     x = pos[0]
     y = pos[1]
 
@@ -91,12 +91,18 @@ def rule_set_two(pos,state,rch,gch,bch):
         state[x,y,:] = [0,1,1]
     if bch[x,y] % m1 == 0:
         state[x,y,:] = [0,0,1]
-    if bch[x,y ] %m2 == 0:
+    if bch[x,y] % m2 == 0:
         state[x,y,:] = [1,0,1]
     if rch[x,y] % m1 == 0:
         state[x,y,:] = [1,0,0]
     if rch[x,y] % m2 == 0:
         state[x,y,:] = [1,1,0]
+    if (rch[x,y] and bch[x,y]) % m1 == 0:
+        state[x,y,:] = [0,1,1]
+    elif (gch[x,y] and rch[x,y]) % m1 == 0:
+        state[x,y,:] = [1,1,0]
+    # if gen > 10 and gch[x,y] == 8:
+    #     state[x,y,:] = [0,1,0]
 
     return state
 
@@ -117,7 +123,7 @@ def simulation(state, depth, saveData):
 
         for px in range(state.shape[0]*state.shape[1]):
             #state = rule_set_one(ind2sub[px], state, rworld, gworld, bworld)
-            state = rule_set_two(ind2sub[px], state, rworld, gworld, bworld)
+            state = rule_set_two(ind2sub[px], state, rworld, gworld, bworld, gen)
         simulation.append([plt.imshow(state)])
         gen += 1
 
@@ -152,5 +158,5 @@ if __name__ == '__main__':
     ''' RUN SIMULATION '''
     simulation(state, 50, {'save': True,
                            'frame_rate': 10,
-                           'file_name': 'CA_color_explosion.mp4'})
+                           'file_name': 'CA_organisms2.mp4'})
 # EOF
