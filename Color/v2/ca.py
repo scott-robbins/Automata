@@ -54,12 +54,15 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
 
         for ind in range(len(rworld.flatten())):
             [x, y] = ind2sub[ind]
+
+            # END CATCH ALLS (Energize State/Churners)
             if bworld[x, y] % 5 == 0:
                 state[x, y] = [0, 1, 1]
-            elif rworld[x, y] % 5 == 0 and (bworld[x, y] and rworld[x,y]) >= 5:
+            if rworld[x, y] % 5 == 0 and (bworld[x, y] and rworld[x, y]) == 8:
                 state[x, y] = [1, 0, 1]
-            elif gworld[x, y] == 5 and (bworld[x, y] and rworld[x, y]) % 4 != 0:
+            if gworld[x, y] % 5 and (bworld[x, y] and rworld[x, y]) % 4 != 0:
                 state[x, y] = [1, 0, 0]
+
             # If magenta
             if (state[x, y][0] and state[x, y][2]) == 1 and state[x, y][1] == 0:
                 # R(ii)/B(ii) % 5 make yellow
@@ -72,15 +75,18 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
             # If cyan
             if (state[x, y][1] and state[x, y][2]) == 1 and state[x, y][0] == 0:
                 # If R(ii) / B(ii) % 5 make green
-                if gworld[x,y] % 4 == 0:
-                    state[x,y] = [0, 1, 0]
-                elif bworld[x,y] % 7 == 0:
+                if gworld[x, y] % 5 == 0:
+                    state[x, y] = [0, 1, 0]
+                elif bworld[x, y] % 4 == 0:
                     state[x, y] = [1, 1, 1]
-                elif rworld[x,y] % 4 == 0:
-                    state[x,y] = [1, 1, 0]
+                elif rworld[x, y] % 4 == 0:
+                    state[x, y] = [1, 1, 0]
+            # If White? ( Here's where it can get REALLY cool I think
+
 
         gen += 1
         simulation.append([plt.imshow(state)])
+
     '''   ANIMATE '''
     a = animation.ArtistAnimation(f,simulation,interval=550,blit=True,repeat_delay=900)
     print 'FINISHED [%ss Elapsed]' % str(time.time() - tic)
@@ -96,9 +102,13 @@ state = np.zeros((width, height, 3))
 n_points_total = 1000
 box = imutils.draw_centered_box(np.zeros((width, height)), 65, 1, False)
 circ = imutils.draw_centered_circle(np.zeros((width, height)), 45, 1, False)
+b1 = imutils.draw_centered_circle(np.zeros((width, height)), 25, 1, False)
+
 '''  RUN SIMULATION '''
-initial_state = create_color_pt_cloud(state, 'B', n_points_total)
-initial_state[:,:,1] = box
-initial_state[:,:,2] = circ
+initial_state = create_color_pt_cloud(state, 'R', n_points_total)
+initial_state[:,:,2] += circ
+initial_state[:,:,1] += box
+initial_state[:,:,0] += b1
+
 probabilistic_cloud(initial_state, [0.9, 0.8,0.5], 200, 250, 'ColorAutomata5.mp4')
 
