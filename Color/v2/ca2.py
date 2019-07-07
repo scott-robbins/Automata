@@ -78,31 +78,100 @@ def rule_set_one(pos, state, rch, gch, bch):
     return state
 
 
-def rule_set_two(pos,state,rch,gch,bch,gen):
+def rule_set_two(pos,state,rch,gch,bch,gen,ngen):
     x = pos[0]
     y = pos[1]
 
     m1 = 7
     m2 = 8
 
-    if gch[x,y] % m1 == 0:
+    red = False
+    green = False
+    blue = False
+    cyan = False
+    magenta = False
+    yellow = False
+    black = False
+    white = True
+
+    if gch[x,y] % m1 == 0 and gen < ngen/2:
         state[x,y,:] = [0,1,0]
+    elif gch[x,y] % m2 == 0:
+        state[x,y,:] = [0,1,1]
     if gch[x,y] % m2 == 0:
         state[x,y,:] = [0,1,1]
     if bch[x,y] % m1 == 0:
         state[x,y,:] = [0,0,1]
     if bch[x,y] % m2 == 0:
         state[x,y,:] = [1,0,1]
-    if rch[x,y] % m1 == 0:
+    if rch[x,y] % m1 == 0 and gen < ngen/2:
         state[x,y,:] = [1,0,0]
+    elif rch[x,y] % m1 == 0:
+        state[x,y,:] = [1,0,1]
     if rch[x,y] % m2 == 0:
         state[x,y,:] = [1,1,0]
     if (rch[x,y] and bch[x,y]) % m1 == 0:
         state[x,y,:] = [0,1,1]
     elif (gch[x,y] and rch[x,y]) % m1 == 0:
         state[x,y,:] = [1,1,0]
-    # if gen > 10 and gch[x,y] == 8:
-    #     state[x,y,:] = [0,1,0]
+    if (float(gen)/ngen) >= 0.5: # Constraining Growth of Organism
+        if gch[x,y] == 8 and (rch[x,y] and bch[x,y]) % m1 != 0:
+         state[x,y,:] = [1,0,0]
+
+        if state[x,y,0]==1 and state[x,y,1]==1 and state[x,y,2]==0: # YELLOW
+            yellow = True
+            if bch[x, y] % m2 == 0:
+                state[x,y,:] = [0,0,1]
+            if bch[x, y] % m1 == 0:
+                state[x,y,:] = [1,0,1]
+            if (rch[x,y] and gch[x,y]) % (m1 or m2) ==0:
+                state[x,y,:] = [0,1,1]
+        # Constrain overgrowth
+        if red or yellow and gch[x, y] <= rch[x,y]:
+            # flip = np.random.random_integers(0, 1, 1)[0]
+            # if flip < 3:
+            #     state[x, y, :] = [0, 1, 0]
+            # elif 6 > flip >= 3:
+            #     state[x, y, :] = [1, 0, 0]
+            # else:
+            #     state[x, y, :] = [0, 0, 1]
+            state[x,y,:] = [0,1,0]
+
+        if state[x,y,0] == 0 and state[x,y,1] == 0 and state[x,y,2] == 1:   # BLUE
+            blue = True
+            if rch[x,y] > (gch[x,y] or bch[x,y]):
+                state[x,y,:] = [1,0,0]
+            if gch[x,y] > (rch[x,y] or bch[x,y]):
+                state[x,y,:] = [0,1,0]
+            if bch[x,y] > (rch[x,y] and gch[x,y]):
+                state[x,y,:] = [1,1,1]
+            if rch[x,y] == gch[x,y] :
+                state[x,y,:] = [1,1,0]
+
+        if state[x, y, 0] == 0 and state[x, y, 1] == 1 and state[x, y, 2] == 0: # GREEN
+            green = True
+            if bch[x,y] > 1 and gch[x,y] % 8 == 0:
+                state[x,y,:] = [0,0,1]
+            if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
+                state[x, y, :] = [0, 1, 1]
+            if gch[x,y] == 8 and rch[x,y]%m2==0:
+                state[x,y,:] = [1,0,0]
+        if state[x,y,0] == 1 and state[x,y,1] == 0 and state[x,y,2] == 0: # RED
+            red = True
+            if rch[x,y] % 3 == 0:
+                if bch[x,y] > gch[x,y]:
+                    state[x,y,:] = [0,0,1]
+                if bch[x, y] == gch[x, y] or bch[x,y]%m2==0:
+                   state[x,y,:] = [0,1,1]
+                if rch[x,y] == 8 and gch[x,y] % m1==0:
+                    state[x,y,:] = [1,1,0]
+
+        if bch[x, y] % m1 == 0:
+            state[x, y, :] = [1, 0, 1]
+        if rch[x, y] % m2 == 0:
+            state[x, y, :] = [1, 0, 1]
+        if rch[x, y] % m1 == 0:
+            state[x, y, :] = [0, 1, 1]
 
     return state
 
@@ -122,8 +191,13 @@ def simulation(state, depth, saveData):
         bworld = ndi.convolve(state[:, :, 2], k0, origin=0)
 
         for px in range(state.shape[0]*state.shape[1]):
-            #state = rule_set_one(ind2sub[px], state, rworld, gworld, bworld)
-            state = rule_set_two(ind2sub[px], state, rworld, gworld, bworld, gen)
+            '''
+            With this model, the actual automata rules can be functionalized, which
+            should help me generate tests more rapidly and also hold onto the more 
+            interesting rule sets (which often get lost during modification)
+            '''
+            # state = rule_set_one(ind2sub[px], state, rworld, gworld, bworld)
+            state = rule_set_two(ind2sub[px], state, rworld, gworld, bworld, gen, depth)
         simulation.append([plt.imshow(state)])
         gen += 1
 
@@ -156,7 +230,7 @@ if __name__ == '__main__':
 
     print '\033[1m\033[3m** STARTING SIMULATION **\033[0m'
     ''' RUN SIMULATION '''
-    simulation(state, 50, {'save': True,
+    simulation(state, 70, {'save': True,
                            'frame_rate': 10,
-                           'file_name': 'CA_organisms2.mp4'})
+                           'file_name': 'CA_organisms3.mp4'})
 # EOF
