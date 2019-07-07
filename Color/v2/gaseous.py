@@ -48,7 +48,6 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
     ind2sub = LIH_flat_map_creator(state)
 
     while gen < n_generations:
-        dims = state.shape
         rworld = ndi.convolve(state[:,:,0], k0, origin=0)
         gworld = ndi.convolve(state[:,:,1], k0, origin=0)
         bworld = ndi.convolve(state[:,:,2], k0, origin=0)
@@ -69,7 +68,6 @@ def probabilistic_cloud(state, weights, n_generations, frame_rate, file_name):
     print 'FINISHED [%ss Elapsed]' % str(time.time() - tic)
     writer = FFMpegWriter(fps=frame_rate, metadata=dict(artist='Me'), bitrate=1800)
     a.save(file_name, writer=writer)
-
     plt.show()
 
 
@@ -84,5 +82,5 @@ circ = imutils.draw_centered_circle(np.zeros((width, height)), 40, 1, False)
 initial_state = create_color_pt_cloud(state, 'B', n_points_total)
 initial_state[:,:,2] = box
 initial_state[:,:,1] = circ
-probabilistic_cloud(initial_state, [0.9, 0.8,0.5], 120, 150, 'ColorAutomata4.mp4')
+probabilistic_cloud(initial_state, [0.9, 0.8,0.5], 120, 350, 'ColorAutomata4.mp4')
 
