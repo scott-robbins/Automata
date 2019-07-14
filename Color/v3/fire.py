@@ -30,6 +30,34 @@ def fire_starter(state, flipped, rch, gch, bch, k, pos):
     return state
 
 
+def burning(state, pos, rch, gch, bch, k):
+    x = pos[0]
+    y = pos[1]
+    N = np.array(k).sum()
+    if state[x, y, 0] == 0 and state[x, y, 1] == 0 and state[x, y, 2] == 0:                     # BLACK
+        if bch[x,y] >= N/4:
+            state[x, y, :] = [1, 0, 0]
+    if state[x, y, 0] == 1 and state[x, y, 1] == 0 and state[x, y, 2] == 0:                     # RED
+        if bch[x,y] %3 == 0:
+            state[x, y, :] = [1, 0, 1]
+    if state[x, y, 0] == 0 and state[x, y, 1] == 0 and state[x, y, 2] == 1:                     # BLUE
+        if bch[x,y] < rch[x,y] and rch[x,y] % 6 == 0:
+            state[x,y,:] = [1,0,0]
+        elif bch[x,y] % 7 == 0:
+            state[x,y,:] = [1,0,0]
+        elif bch[x,y] % 4 ==0:
+            state[x,y,:] = [0,1,0]
+        if bch[x,y] > rch[x,y] and bch[x,y] % 6 == 0:
+            state[x, y, :] = [1,1,0]
+    if state[x, y, 0] == 1 and state[x, y, 1] == 1 and state[x, y, 2] == 0:                     # YELLOW
+        if bch[x,y] % 2 ==0:
+            state[x,y,:] = [0,1,1]
+    if state[x, y, 0] == 1 and state[x, y, 1] == 0 and state[x, y, 2] == 1:                     # MAGENTA
+        if (rch[x, y] or bch[x, y])% 6 == 0:
+            state[x, y, :] = [0, 0, 0]
+    return state
+
+
 def simulation(state, depth, saveData):
     f = plt.figure()
     simulation = list()
@@ -42,7 +70,6 @@ def simulation(state, depth, saveData):
     should help me generate tests more rapidly and also hold onto the more 
     interesting rule sets (which often get lost during modification)
     '''
-    flipped = np.zeros((state.shape[0], state.shape[1]))
     gen = 0
     while gen <= depth:
         rworld = ndi.convolve(state[:, :, 0], k0, origin=0)
@@ -50,9 +77,8 @@ def simulation(state, depth, saveData):
         bworld = ndi.convolve(state[:, :, 2], k0, origin=0)
 
         for px in range(state.shape[0]*state.shape[1]):
-            state = fire_starter(state, flipped, rworld, gworld, bworld, k0, ind2sub[px])
+            state = burning(state, ind2sub[px], rworld, gworld, bworld, k0)
         simulation.append([plt.imshow(state)])
-        # state[:, :, 0] += imutils.draw_centered_circle(state[:, :, np.random.random_integers(0,2,1)[0]], 5 , 1, False)
         gen += 1
 
     print 'FINISHED [%ss Elapsed]' % str(time.time() - tic)
@@ -68,11 +94,11 @@ def simulation(state, depth, saveData):
 width = 100
 height = 100
 state = np.zeros((width, height, 3))
-state[:,:,0] += imutils.draw_centered_circle(state[:,:,0],10,1,False)
-state[:,:,2] += imutils.draw_centered_box(state[:,:,0],20,2,False)
+state[:,:,2] = imutils.draw_centered_box(np.zeros((width, height)),20,1,False)
+state[:,:,2] -= imutils.draw_centered_circle(np.zeros((width, height)),10,1,False)
 config = {'frame_rate': 150,
           'fps': 10,
           'save': True,
-          'file_name': 'flashy_0.mp4',
+          'file_name': 'fire_crystal_2.mp4',
           'origin': [50, 50]}
 simulation(state, depth=100, saveData=config)
