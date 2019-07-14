@@ -26,3 +26,20 @@ intentional initial states, interesting patterns emerge.
 
 ![big bang 3](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/big_bang_3.mp4?raw=true)
 
+![fuzzy_cloud](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/probabilistic.mp4)
+
+
+## Cellular Automata... *In Color!*
+
+![builder](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/CA_builder.mp4)
+
+![moasic_1](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_1.mp4)
+
+![mosaic_2](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_2_ext.mp4)
+
+![mosaic_3](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_3.mp4)
+Trying to build somewhat stable GameOfLife-like organism
+
+![GOLifeLike_1](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/CA_organisms.mp4)
+
+![GOLifeLike_2](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/CA_organisms2.mp4)
