@@ -70,7 +70,7 @@ if __name__ == '__main__':
     state[:,:,2] += imutils.draw_centered_box(state[:, :, 0], 35, 1, False)
     state[:,:,2] += imutils.draw_centered_box(state[:, :, 0], 25, 0, False)
     state[:,:,2] += imutils.draw_centered_box(state[:, :, 0], 15, 1, False)
-    simulation(state, depth=300, saveData={'frame_rate': 150,
+    simulation(state, depth=200, saveData={'frame_rate': 150,
                                            'file_name': 'mosaic_6.mp4',
                                            'fps': 40,
                                            'save': True})
