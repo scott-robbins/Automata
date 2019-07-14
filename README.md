@@ -43,3 +43,8 @@ Trying to build somewhat stable GameOfLife-like organism
 ![GOLifeLike_1](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/CA_organisms.mp4)
 
 ![GOLifeLike_2](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/CA_organisms2.mp4)
+
+## Complex/Chaotic Color Cellular Automata 
+![shimmer](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_5.mp4)
+
+![shimmy](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_6.mp4)
