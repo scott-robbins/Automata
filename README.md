@@ -11,9 +11,9 @@ intentional initial states, interesting patterns emerge.
 
 *Basic parity Experiments*
 
-![pair 1](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_1.mp4)
+[pair 1](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_1.mp4)
 
-![pair 2](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_2.mp4)
+[pair 2](https://raw.githubusercontent.com/scott-robbins/Automata/master/2.0/fractal_fire_2.mp4)
 
 
 *Big Bang Experiments*
