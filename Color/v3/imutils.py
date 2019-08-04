@@ -112,8 +112,8 @@ def ind2sub(index,dims):
 
 def spawn_random_point(state):
     # Initialize a random position
-    x = np.random.randint(0, state.shape[0], 1, dtype=int)
-    y = np.random.randint(0, state.shape[1], 1, dtype=int)
+    x = np.random.random_integers(0, state.shape[0], 1)[0]
+    y = np.random.random_integers(0, state.shape[1], 1)[0]
     return [x, y]
 
 
