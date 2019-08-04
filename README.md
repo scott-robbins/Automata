@@ -48,3 +48,6 @@ Trying to build somewhat stable GameOfLife-like organism
 ![shimmer](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_5.mp4)
 
 ![shimmy](https://raw.githubusercontent.com/scott-robbins/Automata/master/Color/Simulations/mosaic_6.mp4)
+
+# Image Manipulation 
+![FadeIn]()
