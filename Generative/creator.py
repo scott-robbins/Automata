@@ -41,6 +41,7 @@ def draw_progress_bar(im, dims, depth, index):
 def simulation_one(state, size, title, save):
     f = plt.figure()
     simulation = []
+    simulation.append([plt.imshow(state, 'gray')])
     for step in range(DEPTH):
         n0 = ndi.convolve(state, k0, origin=0).flatten()
         n1 = ndi.convolve(state, k1, origin=0).flatten()
@@ -67,7 +68,7 @@ def simulation_one(state, size, title, save):
     a = animation.ArtistAnimation(f, simulation, interval=50, blit=True, repeat_delay=1000)
     print '\033[1m\033[31mFINISHED\033[0m\033[1m\t[%ss Elapsed]\033[0m' % str(time.time() - tic)
     if save:
-        w = FFMpegWriter(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+        w = FFMpegWriter(fps=10, metadata=dict(artist='Me'), bitrate=1800)
         a.save('simulation_0.mp4', writer=w)
     plt.show()
 
