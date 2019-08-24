@@ -156,3 +156,15 @@ def draw_centered_box(state, sz, value, show):
         plt.imshow(state)
         plt.show()
     return state
+
+
+def draw_progress_bar(name, depth, index):
+    os.system('clear')
+    print '\033[1m'+'#'*6+' << \033[31m\033[3m '+name+' \033[0m\033[1m >> '+'#'*8+'\033[0m'
+    bar = '#'
+    for b in range(int(index/depth)*31):
+        bar += '#'
+    if index != depth:
+        print '\033[1m' + bar + ' [\033[32m'+str(100*index/depth + 1)+'% Complete\033[0m\033[1m]\033[0m'
+    else:
+        print '\033[1m' + bar + ' [\033[32m100% Complete\033[0m\033[1m]\033[0m'

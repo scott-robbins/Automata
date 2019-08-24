@@ -21,10 +21,10 @@ k2 = [[0,0,0,0,0],
 DEPTH = 75
 
 
-def draw_progress_bar(im, dims, depth, index):
+def draw_progress_bar(name, dims, depth, index):
     os.system('clear')
     print '\033[1m'+'#'*8+' << \033[31m\033[3mCREATOR\033[0m\033[1m >> '+'#'*8+'\033[0m'
-    print '[*] Loaded Image %s' % im
+    print '[*] Loaded Image %s' % name
     print '[*] Dimensions: %s' % str(dims)
     print '[*] Color: %s' % str(isColor)
     print '[*] N Steps: %d' % DEPTH
@@ -115,10 +115,11 @@ if __name__ == '__main__':
             (img_in.shape[0], img_in.shape[1]))
         img_in -= np.array(noise).astype(np.uint)
     else:
-        img_in = imutils.draw_centered_circle(np.zeros((200, 200)), 50, False)
+        img_in = np.array(plt.imread('fruit-stand.jpg'))[:,:,0]
+        # img_in = imutils.draw_centered_circle(np.zeros((200, 200)), 50, False)
         dims = img_in.shape
         isColor = len(img_in.shape) > 2
-        print '[*] Loaded Circle'
+        print '[*] Loaded Sample Image'
         print '[*] Dimensions: %s' % str(dims)
         print '[*] Color: %s' % str(isColor)
         print '[*] N Steps: %d' % DEPTH
