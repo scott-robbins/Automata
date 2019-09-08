@@ -119,7 +119,7 @@ width = 250
 height = 250
 state = np.zeros((width, height, 3))
 state[:,:,0] = imutils.draw_centered_circle(state[:,:,0],width/3,1,False)
-save = True
+save = False
 if '-in' in sys.argv:
     sys.argv.remove('-in')
     state = load_image()
