@@ -9,7 +9,7 @@ import time
 import os
 
 
-ani_cmd = 'ffmpeg -loglevel quiet -r 2 -i pic%d.png -vcodec libx264' \
+ani_cmd = 'ffmpeg -loglevel quiet -r 20 -i pic%d.png -vcodec libx264' \
           ' -pix_fmt yuv420p cas1.mp4'
 clean = 'ls *.png | while read n; do rm $n; done'
 
@@ -19,7 +19,7 @@ k1 = [[1,1,1,1],[1,0,0,1],[1,0,0,1],[1,1,1,1]]
 k2 = [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]
 
 
-def simulate(world, depth, save):
+def fractate(world, depth, save):
     dims = world.shape
     f = plt.figure()
     simulation = []
@@ -68,8 +68,8 @@ def simulate(world, depth, save):
             if rch[x,y]==1 and bch[x,y]==1:
                 if gc1[ii] > 5 and gc2[ii]==4:
                     world[x,y,:] = 0
-            if save['save']:
-                misc.imsave('pic'+str(step)+'.png', world)
+        if save['save']:
+            misc.imsave('pic' + str(step) + '.png', world)
 
         simulation.append([plt.imshow(world)])
     a = animation.ArtistAnimation(f,simulation,interval=100,blit=True,repeat_delay=900)
@@ -80,25 +80,46 @@ def simulate(world, depth, save):
     plt.show()
 
 
-width = 250
-height = 250
-depth = 10
-state = np.zeros((width, height, 3))
-# Green Grass
-state[:,:,1] = imutils.draw_centered_box(state[:,:,1],100,1, False)
-state[:,:,0] = imutils.draw_centered_box(state[:,:,0],110,1, False)
-# Small Fire
-state[:,:,0] = imutils.draw_centered_box(state[:,:,0],35,1, False)
-state[:,:,1] -= imutils.draw_centered_box(state[:,:,0],35,1, False)
+def simulate(world, depth, save):
+    print '[*] Preparing Simulation'
+    dims = world.shape
+    f = plt.figure()
+    simulation = []
+    simulation.append([plt.imshow(world)])
+    ind2sub = imutils.LIH_flat_map_creator(world[:,:,0])
+    print '[*] Starting Simulation [%ss Elapsed]' % str(time.time()-tic)
+    for step in range(depth):
+        rch = world[:,:,0]
+        gch = world[:,:,1]
+        bch = world[:,:,2]
+        rc1 = ndi.convolve(rch, k0, origin=0).flatten()
+        gc1 = ndi.convolve(gch, k0, origin=0).flatten()
+        bc1 = ndi.convolve(bch, k0, origin=0).flatten()
 
-# f,ax = plt.subplots(1, 2)
-# ax[0].imshow(ndi.convolve(state[:,:,0],k1))
-# ax[1].imshow(ndi.convolve(state[:,:,1],k1))
-# plt.show()
+        simulation.append([plt.imshow(world)])
+    print '[*] Simulation FINISHED [%ss Elapsed]' % str(time.time()-tic)
+    a = animation.ArtistAnimation(f, simulation, interval=100, blit=True)
+    print '[*] Rendering Finished [%ss Elapsed]' % str(time.time()-tic)
+    plt.show()
 
-print 'Starting Simulation'
-opts = {'save': False, 'frame_rate': 100, 'file_name': 'basic_square.mp4'}
-simulate(state, depth, opts)
-if opts['save']:
-    os.system(ani_cmd)
-    os.system(clean)
+
+if __name__ == '__main__':
+
+    width = 250
+    height = 250
+    depth = 150
+    state = np.zeros((width, height, 3))
+    # Green Grass
+    state[:, :, 1] = imutils.draw_centered_box(state[:, :, 1], 100, 1, False)
+    state[:, :, 0] = imutils.draw_centered_box(state[:, :, 0], 110, 1, False)
+    # Small Fire
+    state[:, :, 0] = imutils.draw_centered_box(state[:, :, 0], 35, 1, False)
+    state[:, :, 1] -= imutils.draw_centered_box(state[:, :, 0], 35, 1, True)
+    opts = {'save': True, 'frame_rate': 100, 'file_name': 'basic_square.mp4'}
+    fractate(state,depth,opts)
+    #simulate(state, depth, opts)
+
+    if opts['save']:
+        os.system(ani_cmd)
+        os.system(clean)
+    print 'FINISHED [%ss Elapsed]' % str(time.time()-tic)
