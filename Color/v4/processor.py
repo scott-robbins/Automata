@@ -95,7 +95,7 @@ def process_one(img_in, depth, save):
                 img_in[x, y, 1] = 1
                 img_in[x, y, 0] = 0
             if bch[x,y] and gch[x,y]:
-                if gc1[ii] % 3 == 0:
+                if gc1[ii] % 5 == 0:
                     img_in[x, y, 0] = 1
                     img_in[x, y, 2] = 0
             if not bch[x,y] and not gch[x,y] and not bch[x,y]:
@@ -124,7 +124,7 @@ if '-in' in sys.argv:
     sys.argv.remove('-in')
     state = load_image()
 
-process_one(state, 100, save)
+process_one(state, 110, save)
 
 if save:
     os.system(ani_cmd)
