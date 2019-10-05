@@ -109,8 +109,8 @@ def simulation_two(state, depth, save):
                     state[x,y,0] = 1
                 else:
                     state[x,y,0] = 0
-            if rch[x,y] and gch[x,y] and bch[x,y] and chance:
-                if cmg[x, y] > (cmr[x, y] and cmb[x, y]):
+            if rch[x,y] and gch[x,y] and bch[x,y] and not chance:
+                if cmg[x, y] < (cmr[x, y] or cmb[x, y]):
                     mutation = np.random.random_integers(0, 1, 12).reshape((2,2,3))
                     try:
                         state[x-1:x+1, y-1:y+1, :] = mutation
@@ -124,6 +124,7 @@ def simulation_two(state, depth, save):
     if save['save']:
         writer = FFMpegWriter(fps=save['frame_rate'], metadata=dict(artist='Me'), bitrate=1800)
         a.save(save['file_name'], writer=writer)
+        print '[*] Saved Simulation to %s' % save['file_name']
     plt.show()
 
 
@@ -144,5 +145,5 @@ if __name__ == '__main__':
     E0+  E0-   E1+   E1-    E2+  E2-        Events | 
     '''
 
-    simulation_two(world,depth, {'save':True, 'frame_rate': 20, 'file_name': 'typeA.mp4'})
+    simulation_two(world,depth, {'save':True, 'frame_rate': 20, 'file_name': 'typeA_2.mp4'})
     # os.system('ls *png | while read n; do rm $n; done')
