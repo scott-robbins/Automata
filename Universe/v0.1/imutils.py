@@ -49,8 +49,11 @@ def LIH_flat_map_creator(state):
     :return:
     """
     index_map = {}
-    for index in range(state.shape[0]*state.shape[1]):
-        index_map[index] = ind2sub(index, [state.shape[0], state.shape[1]])
+    ii = 0
+    for x in range(state.shape[0]):
+        for y in range(state.shape[1]):
+            index_map[ii] = [x, y]
+            ii += 1
     return index_map
 
 
